@@ -406,43 +406,43 @@
                 <div class="input-group">
                     <div class="label-row">
                         <label for="advance">Down Payment / Advance</label>
-                        <span class="value-badge" id="advance-badge">15,000 PKR (30%)</span>
+                        <span class="value-badge" id="advance-badge">0 PKR (0%)</span>
                     </div>
                     <div class="input-wrapper">
                         <span class="currency">Rs.</span>
-                        <input type="number" id="advance" value="15000" min="0" max="150000" step="1000">
+                        <input type="number" id="advance" value="0" min="0" max="150000" step="1000">
                     </div>
-                    <input type="range" id="advance-slider" min="0" max="50000" step="1000" value="15000">
+                    <input type="range" id="advance-slider" min="0" max="50000" step="1000" value="0">
                 </div>
 
                 <!-- Monthly Installment -->
                 <div class="input-group">
                     <div class="label-row">
                         <label for="installment">Desired Monthly Installment</label>
-                        <span class="value-badge" id="installment-badge">5,000 PKR / mo</span>
+                        <span class="value-badge" id="installment-badge">10,000 PKR / mo</span>
                     </div>
                     <div class="input-wrapper">
                         <span class="currency">Rs.</span>
-                        <input type="number" id="installment" value="5000" min="1000" max="50000" step="500">
+                        <input type="number" id="installment" value="10000" min="1000" max="50000" step="500">
                     </div>
-                    <input type="range" id="installment-slider" min="1000" max="50000" step="500" value="5000">
+                    <input type="range" id="installment-slider" min="1000" max="50000" step="500" value="10000">
                 </div>
 
                 <!-- Monthly Flat Markup Rate -->
                 <div class="input-group">
                     <div class="label-row">
                         <label for="rate">Monthly Markup Rate (Flat %)</label>
-                        <span class="value-badge" id="rate-badge">4.0%</span>
+                        <span class="value-badge" id="rate-badge">5.7%</span>
                     </div>
                     <div class="input-wrapper">
                         <span class="currency" style="left: auto; right: 1rem;">%</span>
-                        <input type="number" id="rate" value="4" min="0.5" max="15" step="0.1" style="padding-left: 1rem; padding-right: 2.5rem;">
+                        <input type="number" id="rate" value="5.7" min="0.5" max="15" step="0.1" style="padding-left: 1rem; padding-right: 2.5rem;">
                     </div>
-                    <input type="range" id="rate-slider" min="0.5" max="15" step="0.1" value="4">
+                    <input type="range" id="rate-slider" min="0.5" max="15" step="0.1" value="5.7">
                     <div class="presets">
-                        <button class="preset-btn" onclick="setRate(2.5)">2.5% (Low)</button>
-                        <button class="preset-btn active" id="btn-standard" onclick="setRate(4.0)">4.0% (Standard)</button>
-                        <button class="preset-btn" onclick="setRate(5.7)">5.7% (High Profit)</button>
+                        <button class="preset-btn" id="btn-low" onclick="setRate(2.5)">2.5% (Low)</button>
+                        <button class="preset-btn" id="btn-standard" onclick="setRate(4.0)">4.0% (Standard)</button>
+                        <button class="preset-btn active" id="btn-high" onclick="setRate(5.7)">5.7% (High Profit)</button>
                     </div>
                 </div>
 
@@ -605,9 +605,9 @@
             document.querySelectorAll('.preset-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            if (rate === 2.5) document.querySelectorAll('.preset-btn')[0].classList.add('active');
+            if (rate === 2.5) document.getElementById('btn-low').classList.add('active');
             else if (rate === 4.0) document.getElementById('btn-standard').classList.add('active');
-            else if (rate === 5.7) document.querySelectorAll('.preset-btn')[2].classList.add('active');
+            else if (rate === 5.7) document.getElementById('btn-high').classList.add('active');
         }
 
         function formatPKR(num) {
@@ -706,7 +706,7 @@
         }
 
         // Initialize calculations
-        updateAdvanceBadge(15000, 50000);
+        updateAdvanceBadge(0, 50000);
         calculate();
     </script>
 </body>
