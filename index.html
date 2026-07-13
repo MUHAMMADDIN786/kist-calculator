@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kist Mobile Calculator - Premium Business Tool</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(17, 24, 39, 0.7);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --accent-primary: #6366f1; /* Indigo */
+            --accent-secondary: #06b6d4; /* Cyan */
+            --accent-success: #10b981; /* Emerald */
+            --accent-warning: #f59e0b; /* Amber */
+            --accent-danger: #ef4444; /* Rose */
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 10% 20%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                radial-gradient(at 90% 80%, rgba(6, 182, 212, 0.15) 0px, transparent 50%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            background: var(--card-bg);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--text-main), #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            font-weight: 350;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 2.5rem;
+        }
+
+        @media (max-width: 900px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            body {
+                padding: 1rem;
+            }
+            .container {
+                padding: 1.5rem;
+            }
+        }
+
+        .calculator-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        label {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-main);
+            letter-spacing: 0.02em;
+        }
+
+        .value-badge {
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            color: #a5b4fc;
+            padding: 0.2rem 0.75rem;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper span.currency {
+            position: absolute;
+            left: 1rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.8rem 1rem 0.8rem 2.5rem;
+            color: var(--text-main);
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Range slider styling */
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+            margin-top: 0.5rem;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            cursor: pointer;
+            transition: transform 0.1s ease;
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        /* Results Panel */
+        .results-panel {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 1.8rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .results-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
+        }
+
+        .result-main {
+            text-align: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .result-main .number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.1;
+            margin-bottom: 0.2rem;
+            background: linear-gradient(to bottom, #fff, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .result-main .label {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+        }
+
+        .result-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .result-card .val {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.2rem;
+        }
+
+        .result-card.success .val {
+            color: var(--accent-success);
+        }
+
+        .result-card .lbl {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Recovery Timeline Visualization */
+        .timeline-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .timeline-bar {
+            height: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .timeline-part-principal {
+            height: 100%;
+            background: var(--accent-secondary);
+            transition: width 0.3s ease;
+        }
+
+        .timeline-part-profit {
+            height: 100%;
+            background: var(--accent-success);
+            transition: width 0.3s ease;
+        }
+
+        .timeline-legend {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .dot-principal { background: var(--accent-secondary); }
+        .dot-profit { background: var(--accent-success); }
+
+        /* Advice Card */
+        .advice-box {
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            color: #fef3c7;
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 0.88rem;
+            line-height: 1.45;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            transition: all 0.3s ease;
+        }
+
+        .advice-box.safe {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: #d1fae5;
+        }
+
+        .advice-box.danger {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #fee2e2;
+        }
+
+        .advice-header {
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.95rem;
+        }
+
+        /* Preset buttons */
+        .presets {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.2rem;
+        }
+
+        .preset-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 0.35rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .preset-btn:hover, .preset-btn.active {
+            background: var(--accent-primary);
+            color: #fff;
+            border-color: var(--accent-primary);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Mobile Kist Calculator</h1>
+            <p>Calculate markup, tenure, return speed, and risk for installment sales</p>
+        </header>
+
+        <div class="grid">
+            <!-- Left Side: Interactive Inputs -->
+            <div class="calculator-panel">
+                
+                <!-- Mobile Price -->
+                <div class="input-group">
+                    <div class="label-row">
+                        <label for="price">Mobile Price (Cash Price)</label>
+                        <span class="value-badge" id="price-badge">50,000 PKR</span>
+                    </div>
+                    <div class="input-wrapper">
+                        <span class="currency">Rs.</span>
+                        <input type="number" id="price" value="50000" min="10000" max="300000" step="5000">
+                    </div>
+                    <input type="range" id="price-slider" min="10000" max="300000" step="5000" value="50000">
+                </div>
+
+                <!-- Advance Payment -->
+                <div class="input-group">
+                    <div class="label-row">
+                        <label for="advance">Down Payment / Advance</label>
+                        <span class="value-badge" id="advance-badge">15,000 PKR (30%)</span>
+                    </div>
+                    <div class="input-wrapper">
+                        <span class="currency">Rs.</span>
+                        <input type="number" id="advance" value="15000" min="0" max="150000" step="1000">
+                    </div>
+                    <input type="range" id="advance-slider" min="0" max="50000" step="1000" value="15000">
+                </div>
+
+                <!-- Monthly Installment -->
+                <div class="input-group">
+                    <div class="label-row">
+                        <label for="installment">Desired Monthly Installment</label>
+                        <span class="value-badge" id="installment-badge">5,000 PKR / mo</span>
+                    </div>
+                    <div class="input-wrapper">
+                        <span class="currency">Rs.</span>
+                        <input type="number" id="installment" value="5000" min="1000" max="50000" step="500">
+                    </div>
+                    <input type="range" id="installment-slider" min="1000" max="50000" step="500" value="5000">
+                </div>
+
+                <!-- Monthly Flat Markup Rate -->
+                <div class="input-group">
+                    <div class="label-row">
+                        <label for="rate">Monthly Markup Rate (Flat %)</label>
+                        <span class="value-badge" id="rate-badge">4.0%</span>
+                    </div>
+                    <div class="input-wrapper">
+                        <span class="currency" style="left: auto; right: 1rem;">%</span>
+                        <input type="number" id="rate" value="4" min="0.5" max="15" step="0.1" style="padding-left: 1rem; padding-right: 2.5rem;">
+                    </div>
+                    <input type="range" id="rate-slider" min="0.5" max="15" step="0.1" value="4">
+                    <div class="presets">
+                        <button class="preset-btn" onclick="setRate(2.5)">2.5% (Low)</button>
+                        <button class="preset-btn active" id="btn-standard" onclick="setRate(4.0)">4.0% (Standard)</button>
+                        <button class="preset-btn" onclick="setRate(5.7)">5.7% (High Profit)</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Side: Live Results & Analytics -->
+            <div class="results-panel">
+                
+                <div class="result-main">
+                    <div class="number" id="result-tenure">-</div>
+                    <div class="label">Months to Pay Off</div>
+                </div>
+
+                <div class="results-grid">
+                    <div class="result-card">
+                        <div class="val" id="result-total-price">-</div>
+                        <div class="lbl">Total Sale Price</div>
+                    </div>
+                    <div class="result-card success">
+                        <div class="val" id="result-profit">-</div>
+                        <div class="lbl">Your Net Profit</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="val" id="result-roi">-</div>
+                        <div class="lbl">Return on Investment</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="val" id="result-financed">-</div>
+                        <div class="lbl">Financed Amount (Stuck Cash)</div>
+                    </div>
+                </div>
+
+                <!-- Recovery Timeline -->
+                <div class="timeline-section">
+                    <div class="timeline-legend">
+                        <span>Recovery Schedule</span>
+                        <span id="timeline-months-split">N/A</span>
+                    </div>
+                    <div class="timeline-bar">
+                        <div class="timeline-part-principal" id="bar-principal" style="width: 50%;"></div>
+                        <div class="timeline-part-profit" id="bar-profit" style="width: 50%;"></div>
+                    </div>
+                    <div class="timeline-legend" style="margin-top: 0.1rem;">
+                        <div class="legend-item">
+                            <span class="legend-dot dot-principal"></span>
+                            <span>Principal (Get Investment Back)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-dot dot-profit"></span>
+                            <span>Profit Months</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Risk Warning / Advice -->
+                <div class="advice-box" id="advice-card">
+                    <div class="advice-header" id="advice-title">⚠️ Risk Assessment</div>
+                    <div id="advice-text">Please input variables to calculate safety rating.</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const priceInput = document.getElementById('price');
+        const priceSlider = document.getElementById('price-slider');
+        const priceBadge = document.getElementById('price-badge');
+
+        const advanceInput = document.getElementById('advance');
+        const advanceSlider = document.getElementById('advance-slider');
+        const advanceBadge = document.getElementById('advance-badge');
+
+        const installmentInput = document.getElementById('installment');
+        const installmentSlider = document.getElementById('installment-slider');
+        const installmentBadge = document.getElementById('installment-badge');
+
+        const rateInput = document.getElementById('rate');
+        const rateSlider = document.getElementById('rate-slider');
+        const rateBadge = document.getElementById('rate-badge');
+
+        // Output DOM
+        const resultTenure = document.getElementById('result-tenure');
+        const resultTotalPrice = document.getElementById('result-total-price');
+        const resultProfit = document.getElementById('result-profit');
+        const resultRoi = document.getElementById('result-roi');
+        const resultFinanced = document.getElementById('result-financed');
+        
+        const barPrincipal = document.getElementById('bar-principal');
+        const barProfit = document.getElementById('bar-profit');
+        const timelineMonthsSplit = document.getElementById('timeline-months-split');
+
+        const adviceCard = document.getElementById('advice-card');
+        const adviceTitle = document.getElementById('advice-title');
+        const adviceText = document.getElementById('advice-text');
+
+        // Synchronize inputs and sliders
+        function setupSync(input, slider, badgeCallback) {
+            input.addEventListener('input', () => {
+                let val = parseFloat(input.value) || 0;
+                slider.value = val;
+                badgeCallback(val);
+                calculate();
+            });
+
+            slider.addEventListener('input', () => {
+                let val = parseFloat(slider.value);
+                input.value = val;
+                badgeCallback(val);
+                calculate();
+            });
+        }
+
+        // Setup individual syncs
+        setupSync(priceInput, priceSlider, (val) => {
+            priceBadge.textContent = formatPKR(val);
+            // Cap advance slider max to mobile price
+            advanceSlider.max = val;
+            if (parseFloat(advanceInput.value) > val) {
+                advanceInput.value = val;
+                advanceSlider.value = val;
+            }
+            updateAdvanceBadge(parseFloat(advanceInput.value), val);
+        });
+
+        setupSync(advanceInput, advanceSlider, (val) => {
+            let price = parseFloat(priceInput.value) || 0;
+            if (val > price) {
+                val = price;
+                advanceInput.value = val;
+                advanceSlider.value = val;
+            }
+            updateAdvanceBadge(val, price);
+        });
+
+        setupSync(installmentInput, installmentSlider, (val) => {
+            installmentBadge.textContent = formatPKR(val) + " / mo";
+        });
+
+        setupSync(rateInput, rateSlider, (val) => {
+            rateBadge.textContent = val.toFixed(1) + "%";
+            updatePresetHighlight(val);
+        });
+
+        function updateAdvanceBadge(adv, price) {
+            let pct = price > 0 ? Math.round((adv / price) * 100) : 0;
+            advanceBadge.textContent = `${formatPKR(adv)} (${pct}%)`;
+        }
+
+        function setRate(val) {
+            rateInput.value = val;
+            rateSlider.value = val;
+            rateBadge.textContent = val.toFixed(1) + "%";
+            updatePresetHighlight(val);
+            calculate();
+        }
+
+        function updatePresetHighlight(rate) {
+            document.querySelectorAll('.preset-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            if (rate === 2.5) document.querySelectorAll('.preset-btn')[0].classList.add('active');
+            else if (rate === 4.0) document.getElementById('btn-standard').classList.add('active');
+            else if (rate === 5.7) document.querySelectorAll('.preset-btn')[2].classList.add('active');
+        }
+
+        function formatPKR(num) {
+            return new Intl.NumberFormat('en-PK', { maximumFractionDigits: 0 }).format(num) + " PKR";
+        }
+
+        // CORE CALCULATOR LOGIC
+        function calculate() {
+            const price = parseFloat(priceInput.value) || 0;
+            const advance = parseFloat(advanceInput.value) || 0;
+            const installment = parseFloat(installmentInput.value) || 0;
+            const r = (parseFloat(rateInput.value) || 0) / 100; // convert to decimal
+
+            const financed = price - advance;
+            resultFinanced.textContent = formatPKR(financed);
+
+            // Edge Case: No financing needed
+            if (financed <= 0) {
+                resultTenure.textContent = "0";
+                resultTotalPrice.textContent = formatPKR(price);
+                resultProfit.textContent = formatPKR(0);
+                resultRoi.textContent = "0.0%";
+                
+                barPrincipal.style.width = "100%";
+                barProfit.style.width = "0%";
+                timelineMonthsSplit.textContent = "No balance";
+
+                adviceCard.className = "advice-box safe";
+                adviceTitle.textContent = "✅ Immediate Cash Sale";
+                adviceText.textContent = "Customer paid full amount upfront. Zero risk, zero wait time.";
+                return;
+            }
+
+            // Critical threshold: check if installment covers monthly markup
+            const monthlyAccruedMarkup = financed * r;
+            if (installment <= monthlyAccruedMarkup) {
+                resultTenure.textContent = "∞";
+                resultTotalPrice.textContent = "Impossible";
+                resultProfit.textContent = "Infinite";
+                resultRoi.textContent = "N/A";
+
+                barPrincipal.style.width = "0%";
+                barProfit.style.width = "100%";
+                timelineMonthsSplit.textContent = "Deadlock";
+
+                adviceCard.className = "advice-box danger";
+                adviceTitle.textContent = "🛑 Impossible Deal (Loss)";
+                adviceText.textContent = `The installment of ${formatPKR(installment)} is less than or equal to the monthly profit of ${formatPKR(monthlyAccruedMarkup)}. The customer will NEVER pay off the phone, and you will lose your capital! Increase installment to at least ${formatPKR(Math.ceil(monthlyAccruedMarkup + 1000))}.`;
+                return;
+            }
+
+            // Calculation using the formula: N = P / (I - P*r)
+            const exactMonths = financed / (installment - (financed * r));
+            const roundedMonths = Math.ceil(exactMonths);
+            
+            // Total Repayment = Financed + (Financed * r * roundedMonths)
+            const totalRepayment = financed + (financed * r * roundedMonths);
+            const profit = totalRepayment - financed;
+            const roi = (profit / financed) * 100;
+
+            resultTenure.textContent = `${roundedMonths} ${roundedMonths === 1 ? 'Month' : 'Months'}`;
+            resultTotalPrice.textContent = formatPKR(totalRepayment + advance);
+            resultProfit.textContent = formatPKR(profit);
+            resultRoi.textContent = roi.toFixed(1) + "%";
+
+            // Recovery timeline splitting
+            const monthsToRecoverPrincipal = Math.ceil(financed / installment);
+            const profitMonths = Math.max(0, roundedMonths - monthsToRecoverPrincipal);
+
+            timelineMonthsSplit.textContent = `${monthsToRecoverPrincipal}mo principal / ${profitMonths}mo profit`;
+            
+            const principalBarWidth = (monthsToRecoverPrincipal / roundedMonths) * 100;
+            const profitBarWidth = 100 - principalBarWidth;
+            barPrincipal.style.width = `${principalBarWidth}%`;
+            barProfit.style.width = `${profitBarWidth}%`;
+
+            // Risk Assessment & Advice
+            const advanceRatio = advance / price;
+            
+            if (roundedMonths > 12) {
+                // High risk deal
+                adviceCard.className = "advice-box danger";
+                adviceTitle.textContent = "🔴 High Risk (Too Slow)";
+                adviceText.textContent = `At ${roundedMonths} months, your capital is locked for too long. In Pakistan, inflation and device depreciation are high. Recommend demanding at least ${formatPKR(price * 0.2)} advance or increasing installment to ${formatPKR(Math.ceil(financed / 6))} to finish in 6 months.`;
+            } else if (advanceRatio < 0.2 && roundedMonths > 7) {
+                // Moderate Risk
+                adviceCard.className = "advice-box";
+                adviceTitle.textContent = "⚠️ Moderate Risk (Low Advance)";
+                adviceText.textContent = `Low down payment (${Math.round(advanceRatio*100)}%) combined with a ${roundedMonths}-month tenure. Ensure you get post-dated checks and a solid guarantor. If possible, install device-locking MDM software.`;
+            } else {
+                // Safe Deal
+                adviceCard.className = "advice-box safe";
+                adviceTitle.textContent = "🟢 Healthy Deal (Fast Return)";
+                adviceText.textContent = `This deal finishes in ${roundedMonths} months with a strong profit yield of ${roi.toFixed(0)}%. Your principal is recovered in just ${monthsToRecoverPrincipal} months. Safe to proceed with standard documentation.`;
+            }
+        }
+
+        // Initialize calculations
+        updateAdvanceBadge(15000, 50000);
+        calculate();
+    </script>
+</body>
+</html>
